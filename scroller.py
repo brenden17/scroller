@@ -33,20 +33,20 @@ class Scroller:
         layer1.pack(fill=Y)
 
         self.left_scroller_label_var = StringVar()
-        self.left_scroller_label = Label(layer1, textvariable=self.left_scroller_label_var, font=('courier', 10, 'bold'))
+        self.left_scroller_label = Label(layer1, textvariable=self.left_scroller_label_var)
         self.left_scroller_label_var.set(str(self.left_scroller_position))
         self.left_scroller_label.pack(side=TOP, padx=15, pady=5)
-        self.left_scroller_button = Button(layer1, text="Set left scroller position (1)", command=self.set_left_scroller_position)
+        self.left_scroller_button = Button(layer1, text="Set left scroller(1)", command=self.set_left_scroller_position)
         self.left_scroller_button.pack(side=TOP, padx=15, pady=5)
 
         layer2 = Frame(master)
         layer2.pack(fill=X)
 
         self.right_scroller_label_var = StringVar()
-        self.right_scroller_label = Label(layer2, textvariable=self.right_scroller_label_var, font=('courier', 10, 'bold'))
+        self.right_scroller_label = Label(layer2, textvariable=self.right_scroller_label_var)
         self.right_scroller_label_var.set(str(self.right_scroller_position))
         self.right_scroller_label.pack(side=TOP, padx=15, pady=5)
-        self.right_scroller_button = Button(layer2, text="Set right scroller position (2)", command=self.set_right_scroller_position)
+        self.right_scroller_button = Button(layer2, text="Set right scroller(2)", command=self.set_right_scroller_position)
         self.right_scroller_button.pack(side=TOP, padx=5, pady=5)
 
         master.bind('1', self.set_left_scroller_position)
@@ -66,7 +66,7 @@ class Scroller:
         master.bind('<h>', self.scroll_left)
         master.bind('<l>', self.scroll_right)
 
-        # master.bind("<MouseWheel>", self.mouse_wheel)q
+        master.bind("<MouseWheel>", self.mouse_wheel)
 
     def set_left_scroller_position(self, _event=None):
         self.left_scroller_position = pyautogui.position()
@@ -81,9 +81,11 @@ class Scroller:
     def mouse_wheel(self, _event):
     # respond to Linux or Windows wheel event
         if _event.num == 5 or _event.delta == -120:
-            self.scrolling(self.SCROLL_GAP);
+            # self.scrolling(-self.SCROLL_GAP); #down
+            self.scroll_down()
         if _event.num == 4 or _event.delta == 120:
-            self.scrolling(-self.SCROLL_GAP);
+            # self.scrolling(self.SCROLL_GAP);
+            self.scroll_up()
 
     def scroll_up(self, _event=None):
         if self.big_gap.get():
@@ -98,7 +100,10 @@ class Scroller:
             else:
                 self.scrolling(-self.SCROLL_BIG_GAP);
         else:
-            self.scrolling(-self.SCROLL_GAP);
+            if self.go_to_up.get():
+                self.scrolling(self.SCROLL_GAP);
+            else:
+                self.scrolling(-self.SCROLL_GAP);
 
     def scroll_right(self, _event=None):
         if self.big_gap.get():
@@ -137,7 +142,6 @@ class Scroller:
             self.go_to_up.set(True)
 
     def scrolling(self, scorll_gap, left=True, right=True):
-        current_position = pyautogui.position()
         if left == True:
             pyautogui.click(self.left_scroller_position)
             pyautogui.scroll(scorll_gap)
@@ -146,9 +150,7 @@ class Scroller:
             pyautogui.click(self.right_scroller_position)
             pyautogui.scroll(scorll_gap)
             time.sleep(0.2)
-        pyautogui.click(current_position)
-
-        pyautogui.click( app.winfo_x(), app.winfo_y())
+        pyautogui.click(app.winfo_x(), app.winfo_y())
 
 app = Tk()
 
