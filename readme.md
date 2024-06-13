@@ -1,4 +1,4 @@
-This is GUI util which scrolls two document in Python.
+This is a GUI utility that scrolls two documents in Python.
 
 ## Needs.
 
